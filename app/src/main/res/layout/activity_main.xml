@@ -17,26 +17,27 @@
         android:id="@+id/on"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LED ON" />
+        android:text="Run Straight" />
 
     <Button
         android:id="@+id/off"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LED OFF" />
+        android:text="Stop" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <SurfaceView
-        android:id="@+id/joystickLeft"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_margin="8dp"
-        android:visibility="visible" />
+        <com.example.android.bluetoothcontrolhc_06.DragNDriveView
+            android:id="@+id/joystickRight"
+            android:layout_alignParentRight="true"
+            android:layout_width="325dp"
+            android:layout_height="325dp" />
 
-    <SurfaceView
-        android:id="@+id/joystickRight"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_margin="8dp"
-        android:visibility="visible" />
+    </RelativeLayout>
+
+
+
+
 
 </LinearLayout>

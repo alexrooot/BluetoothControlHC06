@@ -18,7 +18,14 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity implements DragNDriveView.JoystickListener , LoaderManager.LoaderCallbacks<Cursor>{
-// 1 = true   2 = true-right  3 = true-left  4 = Right   5 = Left   6 = Reverse   7 = Reverse-Right
+    // The loader's unique id. Loader ids are specific to the Activity or
+    // Fragment in which they reside.
+    private static final int LOADER_ID = 1;
+
+    // The callbacks through which we will interact with the LoaderManager.
+    private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
+
+    // 1 = true   2 = true-right  3 = true-left  4 = Right   5 = Left   6 = Reverse   7 = Reverse-Right
 // 8 = Reverse-Left   9 = STOP    0 = AI
     final String ON     = "1";
     final String OFF    = "9";

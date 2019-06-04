@@ -3,12 +3,10 @@ package com.example.android.bluetoothcontrolhc_06;
 import android.app.Activity;
 import android.content.Loader;
 import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,7 +15,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 
-public class MainActivity extends AppCompatActivity implements DragNDriveView.JoystickListener , LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>{
     // The loader's unique id. Loader ids are specific to the Activity or
     // Fragment in which they reside.
     private static final int LOADER_ID = 1;
@@ -29,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
 // 8 = Reverse-Left   9 = STOP    0 = AI
     final String ON     = "1";
     final String OFF    = "9";
+    String connection = "FALSE";
 
     BluetoothSPP bluetooth;
 
@@ -50,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
 
 
         bluetooth = new BluetoothSPP(this);
+
+
 
         connect = (Button) findViewById(R.id.connect);
         on = (Button) findViewById(R.id.on);
@@ -100,6 +101,11 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
             }
         });
 
+        if (connection == "TRUE") {
+            LoaderManager lm = getLoaderManager();
+            lm.initLoader(LOADER_ID, null, mCallbacks); // starts the loader at found in the end of this file
+        }
+
     }
 
     public void onStart() {
@@ -124,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK)
                 bluetooth.connect(data);
+            connection = "TRUE";
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 bluetooth.setupService();
@@ -136,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
         }
        // */
     }
-
+/*
     @Override
     public void JoystickAction(float xCoordinate, float yCoordinate, int controllerId) {
        Log.e("Right Joystick ", "X : " + xCoordinate + " Y : " + yCoordinate);
@@ -169,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
             bluetooth.send("7", true);
             }else if ( yCoordinate > 0  && (xCoordinate <-0.25 && xCoordinate < -0.75)){
             bluetooth.send("8",true);
-    /*
+
         String directionFR = subFowardOrRevers.substring(0,1);
         System.out.println(directionFR + directionFR.length() + " first char of y");
 
@@ -201,18 +208,23 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
             String tempx = subSideSting.substring(2,3);
             bluetooth.send(subFowardOrRevers + " " + subSideSting + " FOW", true);
             Log.e("Sending Bluetooth", tempY + " " + tempx + " FOW");
-*/
+
 
 
 
     }
 
 
-}
+}*/
+
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+
+         new CoordinatesBTLoader( connection );
+         return  null;
+
     }
 
     @Override

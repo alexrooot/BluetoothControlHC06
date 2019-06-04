@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -15,10 +16,12 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 
-public class MainActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends AppCompatActivity implements DragNDriveView.JoystickListener, LoaderManager.LoaderCallbacks<Cursor>{
     // The loader's unique id. Loader ids are specific to the Activity or
     // Fragment in which they reside.
     private static final int LOADER_ID = 1;
+
+    private LoaderManager lm;
 
     // The callbacks through which we will interact with the LoaderManager.
     private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
@@ -43,14 +46,7 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
         DragNDriveView dragView = new DragNDriveView(this);
         setContentView(R.layout.activity_main);
 
-
-
-
-
-
         bluetooth = new BluetoothSPP(this);
-
-
 
         connect = (Button) findViewById(R.id.connect);
         on = (Button) findViewById(R.id.on);
@@ -101,10 +97,10 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
             }
         });
 
-        if (connection == "TRUE") {
-            LoaderManager lm = getLoaderManager();
-            lm.initLoader(LOADER_ID, null, mCallbacks); // starts the loader at found in the end of this file
-        }
+
+             lm = getLoaderManager();
+           // lm.initLoader(LOADER_ID, null, mCallbacks); // starts the loader at found in the end of this file
+
 
     }
 
@@ -131,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
             if (resultCode == Activity.RESULT_OK)
                 bluetooth.connect(data);
             connection = "TRUE";
+            Log.e("MainActivity", "Connection string value is " + connection);
+            lm.initLoader(LOADER_ID, null, this);
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 bluetooth.setupService();
@@ -221,9 +219,9 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.e("MaiActivity", "Loader started in main activity");
+        return new CoordinatesBTLoader( this, connection );
 
-         new CoordinatesBTLoader( connection );
-         return  null;
 
     }
 
@@ -234,6 +232,11 @@ public class MainActivity extends AppCompatActivity implements  LoaderManager.Lo
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    public void JoystickAction(float xCoordinate, float yCoordinate, int controllerId) {
 
     }
 }

@@ -1,6 +1,7 @@
 package com.example.android.bluetoothcontrolhc_06;
 
 import android.content.AsyncTaskLoader;
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -10,8 +11,8 @@ public class CoordinatesBTLoader extends AsyncTaskLoader {
 
     private String btConnectionOk;
 
-    public CoordinatesBTLoader(String connected){
-        super(null);
+    public CoordinatesBTLoader(Context context, String connected){
+        super(context);
 
         btConnectionOk = connected;
     }

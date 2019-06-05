@@ -27,16 +27,18 @@ public class BackGroundDrive implements DragNDriveView.JoystickListener {
     }
 
 
-    public void sayLog(Context context, BluetoothSPP BT) {
+    public void sayLog(Context context, BluetoothSPP BT , String drive) {
         Log.e(LOG_TAG, "We are in Background going to start BT");
         mContext = context;
 
 
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10      ; i++) {
             BT.send("1", true);
+
+            Log.e(LOG_TAG, "We are sending the message for the next time "+i);
             try {
-                Thread.sleep(500);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

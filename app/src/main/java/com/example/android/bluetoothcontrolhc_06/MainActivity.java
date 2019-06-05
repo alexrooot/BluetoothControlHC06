@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
 // 8 = Reverse-Left   9 = STOP    0 = AI
     final String ON = "1";
     final String OFF = "9";
-    String connection = "FALSE";
+    String Drive = "9";
 
     BluetoothSPP bluetooth;
 
@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if (resultCode == Activity.RESULT_OK)
                 bluetooth.connect(data);
-            connection = "TRUE";
-            Log.v("MainActivity", "Connection string value is " + connection);
+
+            Log.v("MainActivity", "Connection string value is " );
 
             lm.initLoader(1, null, this);
 
@@ -132,20 +132,65 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
 
     }
 
+    public void loaderStart(){
+
+        lm.initLoader(1, null, this);
+    }
+
 
     @Override
     public void JoystickAction(float xCoordinate, float yCoordinate, int controllerId) {
+        Log.e("Right Joystick ", "X : " + xCoordinate + " Y : " + yCoordinate);
+        String sideString = Float.toString(xCoordinate);
+        System.out.println(sideString + " x first string");
+        String subSideSting = sideString.substring(0, 3);
+        System.out.println(subSideSting + " x second string");
 
+
+        String fowardOrReverse = Float.toString((yCoordinate));
+        System.out.println(fowardOrReverse + "y firt string");
+        String subFowardOrRevers = fowardOrReverse.substring(0, 3); // when y is - sub = .
+        System.out.println(subFowardOrRevers + " y second string");
+        // Log.e("Joystick converted", "x is : " + subSideSting + " y is : " +subFowardOrRevers );
+
+
+        if (yCoordinate < 0 && (xCoordinate < 0.25 && xCoordinate < -0.25)) {
+            Drive = "1";
+            //bluetooth.send("1 ,", true); // True
+        } else if (yCoordinate < 0 && (xCoordinate > 0.25 && xCoordinate < 0.75)) {
+            Drive = "2";
+            //bluetooth.send("2 ,", true); // True/Right
+        } else if (yCoordinate < 0 && (xCoordinate < -0.25 && xCoordinate < -0.75)) {
+            Drive = "3";
+            //bluetooth.send("3 ,", true);
+        } else if (xCoordinate < -0.75) {
+            Drive = "4";
+            //bluetooth.send("4", true);
+        } else if (xCoordinate > 0.75) {
+            Drive = "5";
+            //bluetooth.send("5", true);
+        } else if (yCoordinate > 0 && (xCoordinate > 0.25 && xCoordinate < 0.75)) {
+            Drive = "6";
+            //bluetooth.send("6 ,", true);
+        } else if (yCoordinate > 0 && (xCoordinate < -0.25 && xCoordinate < -0.75)) {
+            Drive = "7";
+            //bluetooth.send("7", true);
+        } else if (yCoordinate > 0 && (xCoordinate < -0.25 && xCoordinate < -0.75)) {
+            Drive = "8";
+            //bluetooth.send("8", true);
+        }
     }
 
     @Override
     public Loader<String> onCreateLoader(int id, Bundle args) {
         Log.e("MainActivity", "Override mainactivity Loader");
-        return new mLoader(this , bluetooth);
+        return new mLoader(this , bluetooth, Drive);
     }
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
+
+        loaderStart();
 
     }
 

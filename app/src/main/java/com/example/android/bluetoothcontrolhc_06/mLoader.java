@@ -11,17 +11,21 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 class mLoader extends AsyncTaskLoader<String> {
     Context mContext;
     BluetoothSPP BT;
-    public mLoader(Context contex, BluetoothSPP bluetooth) {
+    String mON;
+    public mLoader(Context contex, BluetoothSPP bluetooth, String drive) {
         super(contex);
         mContext = contex;
         BT = bluetooth;
+        MainActivity mMA = new MainActivity();
+        mON = drive;
+
     }
 
     @Override
     public String loadInBackground() {
         Log.e("mLoader", "Hello " + mContext);
         BackGroundDrive mBackGroundDrive = new BackGroundDrive(mContext);
-        mBackGroundDrive.sayLog(mContext, BT);
+        mBackGroundDrive.sayLog(mContext,BT, mON);
         return "Hello";
     }
 

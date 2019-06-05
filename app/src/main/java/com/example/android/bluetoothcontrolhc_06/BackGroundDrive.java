@@ -9,7 +9,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 
-public class BackGroundDrive {
+public class BackGroundDrive implements DragNDriveView.JoystickListener {
     String LOG_TAG = BackGroundDrive.class.getSimpleName();
     // 1 = true   2 = true-right  3 = true-left  4 = Right   5 = Left   6 = Reverse   7 = Reverse-Right
     // 8 = Reverse-Left   9 = STOP    0 = AI
@@ -27,13 +27,16 @@ public class BackGroundDrive {
     }
 
 
-    public void sayLog(Context context, BluetoothSPP BT){
+    public void sayLog(Context context, BluetoothSPP BT) {
         Log.e(LOG_TAG, "We are in Background going to start BT");
         mContext = context;
-        for ( int i = 0 ; i < 50 ; i ++){
+
+
+
+        for (int i = 0; i < 50; i++) {
             BT.send("1", true);
             try {
-                Thread.sleep(400);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -53,4 +56,38 @@ public class BackGroundDrive {
     }
 
 
+    @Override
+    public void JoystickAction(float xCoordinate, float yCoordinate, int controllerId) {
+        Log.e("Right Joystick ", "X : " + xCoordinate + " Y : " + yCoordinate);
+        String sideString = Float.toString(xCoordinate);
+        System.out.println(sideString + " x first string");
+        String subSideSting = sideString.substring(0, 3);
+        System.out.println(subSideSting + " x second string");
+
+
+        String fowardOrReverse = Float.toString((yCoordinate));
+        System.out.println(fowardOrReverse + "y firt string");
+        String subFowardOrRevers = fowardOrReverse.substring(0, 3); // when y is - sub = .
+        System.out.println(subFowardOrRevers + " y second string");
+        // Log.e("Joystick converted", "x is : " + subSideSting + " y is : " +subFowardOrRevers );
+
+
+        if (yCoordinate < 0 && (xCoordinate < 0.25 && xCoordinate < -0.25)) {
+            bluetooth.send("1 ,", true); // True
+        } else if (yCoordinate < 0 && (xCoordinate > 0.25 && xCoordinate < 0.75)) {
+            bluetooth.send("2 ,", true); // True/Right
+        } else if (yCoordinate < 0 && (xCoordinate < -0.25 && xCoordinate < -0.75)) {
+            bluetooth.send("3 ,", true);
+        } else if (xCoordinate < -0.75) {
+            bluetooth.send("4", true);
+        } else if (xCoordinate > 0.75) {
+            bluetooth.send("5", true);
+        } else if (yCoordinate > 0 && (xCoordinate > 0.25 && xCoordinate < 0.75)) {
+            bluetooth.send("6 ,", true);
+        } else if (yCoordinate > 0 && (xCoordinate < -0.25 && xCoordinate < -0.75)) {
+            bluetooth.send("7", true);
+        } else if (yCoordinate > 0 && (xCoordinate < -0.25 && xCoordinate < -0.75)) {
+            bluetooth.send("8", true);
+        }
+    }
 }

@@ -17,7 +17,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity implements DragNDriveView.JoystickListener , LoaderManager.LoaderCallbacks<String> {
-
+    private LoaderManager lm;
     // 1 = true   2 = true-right  3 = true-left  4 = Right   5 = Left   6 = Reverse   7 = Reverse-Right
 // 8 = Reverse-Left   9 = STOP    0 = AI
     final String ON = "1";
@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
                 bluetooth.send(OFF, true);
             }
         });
-        LoaderManager lm = getLoaderManager();
-        lm.initLoader(1, null, this);
+        lm = getLoaderManager();
+
     }
 
     public void onStart() {
@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
             connection = "TRUE";
             Log.v("MainActivity", "Connection string value is " + connection);
 
+            lm.initLoader(1, null, this);
+
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 bluetooth.setupService();
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements DragNDriveView.Jo
     @Override
     public Loader<String> onCreateLoader(int id, Bundle args) {
         Log.e("MainActivity", "Override mainactivity Loader");
-        return new mLoader(this);
+        return new mLoader(this , bluetooth);
     }
 
     @Override
